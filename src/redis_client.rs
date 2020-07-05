@@ -17,11 +17,15 @@ impl RedisClient {
     }
 
     pub fn send_cmd(mut self, cmd: &Vec<&str>) -> io::Result<String> {
-        let cmdStr = encoder::encode_command(cmd);
-        self.tcp_stream.write_all(cmdStr.as_bytes())?;
+        let cmd_str = encoder::encode_command(cmd);
+        self.tcp_stream.write_all(cmd_str.as_bytes())?;
         let mut result_buff = vec![0u8; 1024];
         self.tcp_stream.read(&mut result_buff)?;
-        let s: String = result_buff.iter().map(|val| *val as char).collect();
+        let s: String = result_buff
+            .iter()
+            .filter(|val| **val != 0)
+            .map(|val| *val as char)
+            .collect();
         Ok(s)
     }
 }
