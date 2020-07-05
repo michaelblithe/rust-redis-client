@@ -1,4 +1,4 @@
-pub fn encode_command(cmds: &Vec<&str>) -> String {
+pub fn encode_command(cmds: &[&str]) -> String {
     let mut cmd_string = "".to_owned();
     cmd_string.push_str(&format!("*{}\r\n", cmds.len()));
     for cmd in cmds {
