@@ -16,11 +16,11 @@ impl RedisClient {
         Ok(client)
     }
 
-    pub fn send_cmd(mut self, cmd: &Vec<&str>) -> io::Result<String> {
+    pub fn send_cmd(mut self, cmd: &[&str]) -> io::Result<String> {
         let cmd_str = encoder::encode_command(cmd);
         self.tcp_stream.write_all(cmd_str.as_bytes())?;
         let mut result_buff = vec![0u8; 1024];
-        self.tcp_stream.read(&mut result_buff)?;
+        self.tcp_stream.read_exact(&mut result_buff)?;
         let s: String = result_buff
             .iter()
             .filter(|val| **val != 0)
